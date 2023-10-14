@@ -312,12 +312,16 @@ internal unsafe class SoundHook : HookableElement
         //enabled = false;
         // Read resource thing LMAO
 
-       // PluginLog.Log("----");
+        // PluginLog.Log("----");
 
 
 
         if (container->OwnerObject != null)
+        {
+            PluginLink.WindowHandler.GetWindow<AudioWindow>().footSteps.Add(new TempFootstep((GameObject*)container->OwnerObject, Vector3.Zero, 3, ((GameObject*)container->OwnerObject)->HitboxRadius));
             PluginLog.Log(Marshal.PtrToStringUTF8((IntPtr)container->OwnerObject->Character.GameObject.Name)!);
+
+        }
        // PluginLog.Log("");
         return _loadCharacterSoundHook.Original(container, unk1, unk2, unk3, unk4, unk5, unk6, unk7);
     }

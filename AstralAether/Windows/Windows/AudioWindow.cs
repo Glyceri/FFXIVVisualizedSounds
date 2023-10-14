@@ -14,6 +14,7 @@ using FFXIVClientStructs.FFXIV.Common.Math;
 using FFXIVClientStructs.Havok;
 using FFXIVClientStructs.Interop;
 using ImGuiNET;
+using Lumina.Excel.GeneratedSheets;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -58,9 +59,8 @@ internal class AudioWindow : AstralAetherWindow
             Vector3 basePos = Vector3.Zero;
             if (footstep.gObject != null)
             {
-                //PluginLog.Log((footstep.gObject->Rotation * (float)(180 / Math.PI)).ToString());
                 // HOLY FOCKING CHEERS MATE :DD https://github.com/XIV-Tools/CustomizePlus/blob/main/CustomizePlus/Data/Armature/Armature.cs#L321
-                CharacterBase* charaBase = ((CharacterBase*)footstep.gObject->GetDrawObject());
+                CharacterBase* charaBase = (CharacterBase*)footstep.gObject->GetDrawObject();
                 if (charaBase == null) continue;
 
                 System.Numerics.Matrix4x4 matrix = System.Numerics.Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromEuler(new Vector3(0, footstep.gObject->Rotation * (float)(180.0 / Math.PI), 0)));
@@ -82,14 +82,38 @@ internal class AudioWindow : AstralAetherWindow
 
                         for (int b = 0; b < boneCount; ++b)
                         {
-                            if (curPoseSkeleton->Bones[b].Name.String is string boneName && boneName != null && boneName == "j_f_dlip_b")
+                            if (curPoseSkeleton->Bones[b].Name.String is string boneName && boneName != null && (boneName == "j_f_dlip_b" || boneName == "j_m_dlip_b"))
                             {
                                 hkQsTransformf transform = curPose->ModelPose.Data[b];
                                 Character* c = (Character*)footstep.gObject;
 
+                                //Race race = SheetUtils.instance.GetRace(c->DrawData.CustomizeData[(int)CustomizeIndex.Race])!;
+                                Tribe tribe = SheetUtils.instance.GetTribe(c->DrawData.CustomizeData[(int)CustomizeIndex.Tribe])!;
                                 int height = c->DrawData.CustomizeData[(int)CustomizeIndex.Height];
+                                
+                                Gender gender = (Gender)c->DrawData.CustomizeData[(int)CustomizeIndex.Gender];
 
-                                float outcome = MathUtils.instance.Map(height, 0, 100, 0.96f, 1.04f);
+                                //PluginLog.Log($"Race: {(gender == 0 ? tribe.Masculine : tribe.Feminine)}, Height: {height}, Gender: {gender}");
+
+                                // Highlander   : 1
+                                // Midlander    : 2
+                                // Elezen       : 3, 4
+                                // Lalafel      : 5, 6
+                                // Miqote       : 7, 8
+                                // Roegadyn     : 9, 10
+                                // Au Ra        : 11, 12
+                                // Hrothgar     : 13, 14
+                                // Viera        : 15, 16
+
+
+                                float outcome = (tribe.RowId, gender) switch
+                                {
+                                    (7, Gender.Female) => MathUtils.instance.Map(height, 0, 100, 0.96f, 1.04f),
+                                    (8, Gender.Female) => MathUtils.instance.Map(height, 0, 100, 0.96f, 1.04f),
+                                    (11, Gender.Female) => MathUtils.instance.Map(height, 0, 100, 0.925f, 1f),
+                                    (12, Gender.Female) => MathUtils.instance.Map(height, 0, 100, 0.925f, 1f),
+                                    _ => 1
+                                };
 
                                 Vector3 translated = Vector3.Transform(new Vector3(transform.Translation.X, transform.Translation.Y, transform.Translation.Z) * outcome, matrix);
                                 //* 1.040f, matrix);
@@ -107,7 +131,7 @@ internal class AudioWindow : AstralAetherWindow
 
                                 float dot = Vector3.Dot(camVec, endVec);
                                 PluginLog.Log(dot.ToString());
-                                if (dot > -0.95f && dot < 0.95f)
+                                //if (dot > -0.95f && dot < 0.95f)
                                 {
 
                                     lines.Add(new Line(footstep.gObject->Position + translated + start, footstep.gObject->Position + translated + end));
@@ -116,6 +140,7 @@ internal class AudioWindow : AstralAetherWindow
 
                                     lines.Add(new Line(footstep.gObject->Position + translated + start - new Vector3(0, 0.01f, 0), footstep.gObject->Position + translated + end - new Vector3(0, 0.015f, 0)));
                                 }
+                                break;
                             }
                         }
                         
@@ -153,12 +178,12 @@ internal class AudioWindow : AstralAetherWindow
             ImDrawListPtr drawlist = ImGui.GetBackgroundDrawList();
             if (footstep.gObject != null)
             {
-                uint colour = Color(new Vector4(0.4f, 1, 0.4f, 1));
+                uint colour = Color(new Vector4(1, 0.4f, 0.4f, 1));
 
                 int counter = 0;
                 foreach(Line line in lines)
                 {
-                    drawlist.AddLine(WorldToScreen(line.start), WorldToScreen(line.end), colour, 3f);
+                    drawlist.AddLine(WorldToScreen(line.start), WorldToScreen(line.end), colour, 5f);
                     counter++;
                 }
             } else {
@@ -229,4 +254,10 @@ public struct Line
         this.start = start;
         this.end = end;
     }
+}
+
+public enum Gender 
+{ 
+    Male,
+    Female
 }
