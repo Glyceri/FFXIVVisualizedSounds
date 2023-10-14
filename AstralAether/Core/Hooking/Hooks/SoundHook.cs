@@ -1,12 +1,15 @@
 using AstralAether.Core.Handlers;
 using AstralAether.Core.Hooking.Attributes;
+using AstralAether.Windows.AudioModules;
 using AstralAether.Windows.Windows;
 using Dalamud.Hooking;
 using Dalamud.Logging;
 using Dalamud.Utility.Signatures;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using System;
+using System.ComponentModel;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
@@ -163,10 +166,7 @@ internal unsafe class SoundHook : HookableElement
         char a17)
     {
         footPos = new Vector3(a2, a3, a4);
-        //PluginLog.Log(PluginHandlers.ClientState.LocalPlayer!.Position.ToString());
-        //PluginLog.Log($"PRE: {a2}, {a3}, {a4}");
-
-        PluginLink.WindowHandler.GetWindow<AudioWindow>().footSteps.Add(new TempFootstep(footPos, 0.5f, lastFoot->HitboxRadius));
+        PluginLink.WindowHandler.GetWindow<AudioWindow>().audioModules.Add(new StaticCircleModule(0.5, new Vector4(0.4f, 0.4f, 1.0f, 1.0f), footPos, lastFoot->HitboxRadius * 60));
 
         _pre!.Original(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17);
     }
@@ -211,25 +211,17 @@ internal unsafe class SoundHook : HookableElement
 
         if (lastFoot != null)
         {
-            PluginLink.WindowHandler.GetWindow<AudioWindow>().footSteps.Add(new TempFootstep(lastFoot, Vector3.Zero, 4f, 1));
-            PluginLog.Log($"Battle Sound at: {new Vector3(a2, a3, a4)}");
+            PluginLink.WindowHandler.GetWindow<AudioWindow>().audioModules.Add(new PlayerSpeechModule(13.0, 10, new Vector4(1.0f, 0.4f, 0.4f, 1.0f), (BattleChara*)lastFoot, Vector3.Zero, "j_kao"));
         }
-
        
         return _BattleSound!.Original(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13);
     }
 
     public char TempDetour(IntPtr a1, char* a2, int a3, int a4, int a5, int a6, int a7)
     {
-        //PluginLog.Log("TEmp detour: " + a3 + " : " + a4 + " : " + a5 + " : " + a6 + " : " + a7);
-
-        //PluginLink.WindowHandler.GetWindow<AudioWindow>().footSteps.Add(new TempFootstep(footPos, 1f, lastFoot->HitboxRadius));
-
         try
         {
-
             //Character* chara = (Character*)a1;
-
             //PluginLog.Log(Marshal.PtrToStringUTF8((IntPtr)chara->GameObject.Name)!);
 
         }catch(Exception e) { PluginLog.Log(e.Message); }
@@ -303,26 +295,11 @@ internal unsafe class SoundHook : HookableElement
 
     private nint LoadCharacterSoundDetour(VfxContainer* container, int unk1, int unk2, nint unk3, ulong unk4, int unk5, int unk6, ulong unk7)
     {
-        //PluginLog.Log("Chara sound: ");
-
-
-        // Reset resource thing
-        //enabled = true;
-
-        //enabled = false;
-        // Read resource thing LMAO
-
-        // PluginLog.Log("----");
-
-
-
         if (container->OwnerObject != null)
         {
-            PluginLink.WindowHandler.GetWindow<AudioWindow>().footSteps.Add(new TempFootstep((GameObject*)container->OwnerObject, Vector3.Zero, 3, ((GameObject*)container->OwnerObject)->HitboxRadius));
-            PluginLog.Log(Marshal.PtrToStringUTF8((IntPtr)container->OwnerObject->Character.GameObject.Name)!);
-
+            PluginLink.WindowHandler.GetWindow<AudioWindow>().audioModules.Add(new PlayerSpeechModule(13.0, 10, new Vector4(1.0f, 0.4f, 0.4f, 1.0f), container->OwnerObject, Vector3.Zero, "j_kao"));
         }
-       // PluginLog.Log("");
+
         return _loadCharacterSoundHook.Original(container, unk1, unk2, unk3, unk4, unk5, unk6, unk7);
     }
 }

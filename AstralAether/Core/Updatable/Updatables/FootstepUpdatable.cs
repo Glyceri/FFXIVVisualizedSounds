@@ -17,12 +17,8 @@ internal class FootstepUpdatable : Updatable
     public override void Update(IFramework frameWork)
     {
         audioWindow.IsOpen = true;
-        for (int i = audioWindow.footSteps.Count - 1; i >= 0; i--)
-        {
-            if ((audioWindow.footSteps[i].timer -= frameWork.UpdateDelta.TotalSeconds) <= 0)
-            {
-                audioWindow.footSteps.RemoveAt(i);
-            }
-        }
+        for (int i = audioWindow.audioModules.Count - 1; i >= 0; i--)
+            if(audioWindow.audioModules[i].Tick(frameWork.UpdateDelta.TotalSeconds))
+                audioWindow.audioModules.RemoveAt(i);
     }
 }
