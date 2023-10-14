@@ -1,9 +1,5 @@
-using AstralAether.Core.Handlers;
-using AstralAether.Utilization.UtilsModule;
 using AstralAether.Windows.Attributes;
 using AstralAether.Windows.AudioModules.Base;
-using Dalamud.Game.ClientState.Objects.Enums;
-using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Common.Math;
 using ImGuiNET;
 using System.Collections.Generic;
@@ -42,6 +38,6 @@ internal class AudioWindow : AstralAetherWindow
     {
         ImDrawListPtr imDrawListPtr = ImGui.GetBackgroundDrawList();
         foreach(AudioModule audioModule in audioModules)
-            audioModule.Draw(imDrawListPtr);
+            audioModule?.Draw(imDrawListPtr);
     }
 }
