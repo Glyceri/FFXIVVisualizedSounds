@@ -21,6 +21,7 @@ public class StaticLineModule : StaticAudioModule
 
     public override void Draw(ImDrawListPtr drawListPtr)
     {
+        if (ScreenPosition == Vector2.Zero || ScreenEndPosition == Vector2.Zero) return;
         drawListPtr.AddLine(ScreenPosition, ScreenEndPosition, Colour, rimSize);
     }
 }

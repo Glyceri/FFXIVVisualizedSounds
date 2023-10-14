@@ -21,6 +21,7 @@ public class StaticCircleModule : StaticScalableAudioModule
 
     public override void Draw(ImDrawListPtr drawListPtr)
     {
+        if (ScreenPosition == Vector2.Zero) return;
         float size = Math.Clamp(StartSize * (Animated ? Timer : 1.0f), 0, ClampSize);
         drawListPtr.AddCircle(ScreenPosition, size, Colour, sections, rimSize);
     }

@@ -211,7 +211,7 @@ internal unsafe class SoundHook : HookableElement
 
         if (lastFoot != null)
         {
-            PluginLink.WindowHandler.GetWindow<AudioWindow>().audioModules.Add(new PlayerSpeechModule(13.0, 10, new Vector4(1.0f, 0.4f, 0.4f, 1.0f), (BattleChara*)lastFoot, Vector3.Zero, "j_kao"));
+            PluginLink.WindowHandler.GetWindow<AudioWindow>().audioModules.Add(new PlayerSpeechModule(13.0, new Vector4(1.0f, 1.0f, 1.0f, 1.0f), (BattleChara*)lastFoot, Vector3.Zero, "j_ago"));
         }
        
         return _BattleSound!.Original(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13);
@@ -297,7 +297,7 @@ internal unsafe class SoundHook : HookableElement
     {
         if (container->OwnerObject != null)
         {
-            PluginLink.WindowHandler.GetWindow<AudioWindow>().audioModules.Add(new PlayerSpeechModule(13.0, 10, new Vector4(1.0f, 0.4f, 0.4f, 1.0f), container->OwnerObject, Vector3.Zero, "j_kao"));
+            PluginLink.WindowHandler.GetWindow<AudioWindow>().audioModules.Add(new PlayerSpeechModule(13.0, new Vector4(1.0f, 1.0f, 1.0f, 1.0f), container->OwnerObject, Vector3.Zero, "j_ago"));
         }
 
         return _loadCharacterSoundHook.Original(container, unk1, unk2, unk3, unk4, unk5, unk6, unk7);

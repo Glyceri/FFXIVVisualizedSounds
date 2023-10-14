@@ -20,11 +20,16 @@ public unsafe abstract class DynamicBoneTransformModule : DynamicBoneFollowModul
     Vector3 scaledBoneTranslation;
     public Vector3 ScaledBoneTranslation => scaledBoneTranslation;
 
-    public DynamicBoneTransformModule(double timer, Vector4 colour, BattleChara* player, Vector3 offset, float startSize, string boneName) : base(timer, colour, player, offset, startSize, boneName) { }
+    Matrix4x4 boneMatrix;
+    public Matrix4x4 BoneMatrix => boneMatrix;
+
+    public DynamicBoneTransformModule(double timer, Vector4 colour, BattleChara* player, Vector3 offset, float startSize, string boneName, int lockTo = -1) : base(timer, colour, player, offset, startSize, boneName, lockTo) { }
 
     public override sealed void BoneDraw(ImDrawListPtr drawListPtr, hkaPose* currentPose, hkaSkeleton* curPoseSkeleton, hkaBone bone, int boneIndex)
     {
         boneTransform = currentPose->ModelPose.Data[boneIndex];
+        Quaternion boneQuaternion = new Quaternion(boneTransform.Rotation.X, boneTransform.Rotation.Y, boneTransform.Rotation.Z, boneTransform.Rotation.W);
+        boneMatrix = Matrix4x4.CreateFromQuaternion(boneQuaternion);
         boneTranslation = new Vector3(boneTransform.Translation.X, boneTransform.Translation.Y, boneTransform.Translation.Z);
         scaledBone = boneTranslation * SkeletonScale;
         scaledBoneTranslation = FollowedMixedTranslation(scaledBone);
