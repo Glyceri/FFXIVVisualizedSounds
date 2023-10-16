@@ -13,8 +13,8 @@ internal class RemapUtils : UtilsRegistryType, ISingletonBase<RemapUtils>
     public readonly Dictionary<string, SkeletonOffset[]> offsetSkeleton = new Dictionary<string, SkeletonOffset[]>()
     {
         { "j_ago", new SkeletonOffset[] {
-                   new SkeletonOffset(Gender.Female, Tribe.SeekerOfTheSun, new Vector3(0.08f, 0.01f, 0)),
-                   new SkeletonOffset(Gender.Female, Tribe.KeeperOfTheMoon, new Vector3(0.08f, 0.01f, 0)),
+                   new SkeletonOffset(Gender.Female, Tribe.SeekerOfTheSun, new Vector3(0.07f, -0.005f, 0)),
+                   new SkeletonOffset(Gender.Female, Tribe.KeeperOfTheMoon, new Vector3(0.07f, -0.005f, 0)),
                    new SkeletonOffset(Gender.Male, Tribe.SeekerOfTheSun, new Vector3(0.09f, 0.014f, 0)),
                    new SkeletonOffset(Gender.Male, Tribe.KeeperOfTheMoon, new Vector3(0.09f, 0.014f, 0)),
                    new SkeletonOffset(Gender.Female, Tribe.Plainsfolk, new Vector3(0.1f, -0.004f, 0)),

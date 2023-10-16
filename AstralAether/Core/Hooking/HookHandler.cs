@@ -1,5 +1,3 @@
-using Dalamud.Game;
-using Dalamud.Utility.Signatures;
 using AstralAether.Core.AutoRegistry;
 using AstralAether.Core.Handlers;
 using AstralAether.Core.Hooking.Attributes;

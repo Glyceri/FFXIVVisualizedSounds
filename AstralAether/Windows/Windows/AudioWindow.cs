@@ -37,7 +37,10 @@ internal class AudioWindow : AstralAetherWindow
     public unsafe override void OnDraw()
     {
         ImDrawListPtr imDrawListPtr = ImGui.GetBackgroundDrawList();
-        foreach(AudioModule audioModule in audioModules)
+        foreach (AudioModule audioModule in audioModules)
+        {
+            if (audioModule.IsBlackened) continue;
             audioModule?.Draw(imDrawListPtr);
+        }
     }
 }

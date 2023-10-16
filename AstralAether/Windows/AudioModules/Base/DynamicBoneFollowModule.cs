@@ -45,7 +45,7 @@ public unsafe abstract class DynamicBoneFollowModule : DynamicSkeletonAudioModul
                 }
             }
         }
-        catch (Exception e) { PluginLog.Log(e.Message); }
+        catch(Exception e) { PluginLog.Log(e.Message); blackened = true; }
     }
 
     public abstract void BoneDraw(ImDrawListPtr drawListPtr, hkaPose* currentPose, hkaSkeleton* curPoseSkeleton, hkaBone bone, int boneIndex);

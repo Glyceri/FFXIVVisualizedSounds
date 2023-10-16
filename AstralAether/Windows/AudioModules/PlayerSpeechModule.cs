@@ -14,9 +14,9 @@ public unsafe class PlayerSpeechModule : DynamicBoneTransformModule
     {
         //drawListPtr.AddCircle(WorldToScreen(ScaledBoneTranslation), 80, Colour, 12, 5.0f);
 
-        new StaticLineModule(0, UnbakedColour, GetFor(), GetFor(0, 0.10f)).Draw(drawListPtr);
-        new StaticLineModule(0, UnbakedColour, GetFor(0.005f), GetFor(0.015f, 0.10f)).Draw(drawListPtr);
-        new StaticLineModule(0, UnbakedColour, GetFor(-0.005f), GetFor(-0.015f, 0.10f)).Draw(drawListPtr);
+        new StaticLineModule(0, UnbakedColour, GetFor(), GetFor(0, 0.30f), 0.5f).Draw(drawListPtr);
+        new StaticLineModule(0, UnbakedColour, GetFor(0.01f), GetFor(0.045f, 0.30f), 0.5f).Draw(drawListPtr);
+        new StaticLineModule(0, UnbakedColour, GetFor(-0.01f), GetFor(-0.045f, 0.30f), 0.5f).Draw(drawListPtr);
     }
 
     Vector3 GetFor(float offset = 0, float distance = 0) => FollowedMixedTranslation(ScaledBone + Vector3.Transform(GetOffsetAt(offset) + new Vector3(Distance(distance), 0, 0), BoneMatrix));

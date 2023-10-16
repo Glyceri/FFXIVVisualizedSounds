@@ -27,6 +27,7 @@ public unsafe abstract class DynamicBoneTransformModule : DynamicBoneFollowModul
 
     public override sealed void BoneDraw(ImDrawListPtr drawListPtr, hkaPose* currentPose, hkaSkeleton* curPoseSkeleton, hkaBone bone, int boneIndex)
     {
+        if (FollowMe == null!) return;
         boneTransform = currentPose->ModelPose.Data[boneIndex];
         Quaternion boneQuaternion = new Quaternion(boneTransform.Rotation.X, boneTransform.Rotation.Y, boneTransform.Rotation.Z, boneTransform.Rotation.W);
         boneMatrix = Matrix4x4.CreateFromQuaternion(boneQuaternion);

@@ -1,5 +1,4 @@
 using Dalamud.Game.Command;
-using AstralAether.Commands;
 using AstralAether.Commands.Attributes;
 using AstralAether.Core.AutoRegistry;
 using AstralAether.Core.Handlers;

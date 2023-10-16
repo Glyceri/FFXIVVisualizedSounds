@@ -1,5 +1,6 @@
 using AstralAether.Core.Handlers;
 using AstralAether.Windows.Attributes;
+using AstralAether.Windows.AudioModules.Base;
 using AstralAether.Windows.Windows;
 using Dalamud.Plugin.Services;
 
@@ -18,7 +19,10 @@ internal class FootstepUpdatable : Updatable
     {
         audioWindow.IsOpen = true;
         for (int i = audioWindow.audioModules.Count - 1; i >= 0; i--)
-            if(audioWindow.audioModules[i].Tick(frameWork.UpdateDelta.TotalSeconds))
+        {
+            AudioModule module = audioWindow.audioModules[i];
+            if (module.Tick(frameWork.UpdateDelta.TotalSeconds))
                 audioWindow.audioModules.RemoveAt(i);
+        }
     }
 }

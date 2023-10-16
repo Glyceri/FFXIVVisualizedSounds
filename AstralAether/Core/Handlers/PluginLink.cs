@@ -5,6 +5,7 @@ using AstralAether.Core.Updatable;
 using AstralAether.Windows.Handler;
 using AstralAether.Core.Hooking;
 using AstralAether.Utilization;
+using AstralAether.Core.Sound;
 
 namespace AstralAether.Core.Handlers;
 
@@ -20,6 +21,7 @@ internal class PluginLink
     internal static QuitHandler QuitHandler { get; set; } = null!;
     internal static ChatHandler ChatHandler { get; private set; } = null!;
     internal static UtilsHandler Utils { get; private set; } = null!;
+    internal static ParserHandler ParserHandler { get; private set; } = null!;
 
     internal static void Start(ref DalamudPluginInterface dalamud, ref AstralAetherPlugin quickChatPlugin)
     {
@@ -27,6 +29,7 @@ internal class PluginLink
         QuickChatPlugin = quickChatPlugin;
         Configuration = PluginHandlers.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
         Configuration.Initialize();
+        ParserHandler = new ParserHandler();
         WindowHandler = new WindowsHandler();
         CommandHandler = new CommandHandler();
         Utils = new UtilsHandler();

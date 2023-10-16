@@ -10,5 +10,6 @@ internal class QuitHandler
         PluginLink.ChatHandler?.Dispose();
         PluginLink.HookHandler?.Dispose();
         PluginLink.Utils?.Dispose();
+        PluginLink.ParserHandler?.Dispose();    
     }
 }

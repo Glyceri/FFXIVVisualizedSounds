@@ -6,6 +6,9 @@ namespace AstralAether.Windows.AudioModules.Base;
 
 public abstract class AudioModule
 {
+    protected bool blackened = false;
+    public bool IsBlackened { get => blackened; }
+
     double timer;
     public float Timer => (float)timer;
 
@@ -25,6 +28,7 @@ public abstract class AudioModule
 
     public virtual bool Tick(double time)
     {
+        if (blackened) return true;
         timer -= time;
         return timer <= 0;
     }
