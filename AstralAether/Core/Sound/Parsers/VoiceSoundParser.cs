@@ -5,13 +5,16 @@ using AstralAether.Core.Sound.SoundTypes.FootstepSoundTypes.BaseTypes;
 
 namespace AstralAether.Core.Sound.Parsers;
 
-[SoundParser("vfx")]
-internal class VfxSoundParser : SoundParserElement
+[SoundParser("voice")]
+internal class VoiceSoundParser : SoundParserElement
 {
     public override SoundType Parse(string fullPath, ref string[] splitPath, string mainIdentifier)
     {
-        if (fullPath.EndsWith("SE_VFX_common")) return new VFXCommonSoundType(fullPath, ref splitPath, mainIdentifier);
+        int length = splitPath.Length;
+        if (length < 3) return new InvalidSoundType(fullPath);
 
-        return new BaseVFXSoundType(fullPath, mainIdentifier);
+        if (splitPath[2] == "Vo_Emote" && length > 3) return new VoEmoteSoundType(fullPath, ref splitPath, mainIdentifier);
+
+        return new BaseVoiceType(fullPath, mainIdentifier);
     }
 }

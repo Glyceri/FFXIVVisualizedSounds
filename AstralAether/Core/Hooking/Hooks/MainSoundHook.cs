@@ -9,13 +9,14 @@ using System.Numerics;
 using AstralAether.Utilization.UtilsModule;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using AstralAether.Core.Sound;
-using AstralAether.Core.Sound.SoundTypes.FootstepSoundTypes;
-using AstralAether.Core.Sound.SoundTypes;
 using System.Globalization;
 using AstralAether.Core.Sound.SoundTypes.BaseTypes;
 using AstralAether.Core.Handlers;
 using AstralAether.Windows.Windows;
 using AstralAether.Windows.AudioModules;
+using AstralAether.Core.Sound.SoundTypes.FootstepSoundTypes;
+using AstralAether.Core.Sound.SoundTypes;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
 
 namespace AstralAether.Core.Hooking.Hooks;
 
@@ -41,36 +42,43 @@ internal class MainSoundHook : HookableElement
         {
             string path = Marshal.PtrToStringUTF8(fileName)!;
             Vector3 position = MathUtils.instance.MakeFromSLODWORDPOS(posXAsHex, posYAsHex, posZAsHex);
-            GameObject* lastGameObject = SoundStorage.LastApricot!;
             SoundType soundType = SoundParser.ParseSound(path);
-            if (lastGameObject == null)
-            {
-                // Get other game objects here depending on type
-                GetForSoundType(ref soundType, ref lastGameObject);
-            }
-
-            if (soundType is BaseFootstepSoundType && lastGameObject != null) PluginLink.WindowHandler.GetWindow<AudioWindow>().audioModules.Add(new StaticCircleModule(0.4, new Vector4(0.4f, 0.4f, 1.0f, 1.0f), position, 60 * lastGameObject->HitboxRadius));
+            GetForSoundType(ref soundType, out GameObject* lastGameObject);
 
             PrintSoundType(ref soundType, position, lastGameObject);
+            if ((soundType is BaseFootstepSoundType || SoundStorage.footstepCount > 0) && lastGameObject != null)
+            {
+                int minusMe = soundType is BaseFootstepSoundType ? 1 : 2;
+                if (soundType is not BaseFootstepSoundType) SoundStorage.footstepCount -= minusMe;
+                PluginLink.WindowHandler.GetWindow<AudioWindow>().audioModules.Add(new StaticCircleModule(0.4, new Vector4(0.4f, 0.4f, 1.0f, 1.0f), position, 60 * lastGameObject->HitboxRadius));
+            }
+            if (soundType is VoEmoteSoundType && lastGameObject != null) PluginLink.WindowHandler.GetWindow<AudioWindow>().audioModules.Add(new PlayerSpeechModule(3.0, new Vector4(1.0f, 1.0f, 1.0f, 1.0f), (BattleChara*)lastGameObject, Vector3.Zero, "j_ago"));
+
+            //if (soundType is UnimplementedSoundType) PluginLink.WindowHandler.GetWindow<AudioWindow>().audioModules.Add(new StaticCircleModule(10.0, new Vector4(0, 1, 1, 1), position, 200, 12, 6));
+            //if (soundType is BaseBattleSoundType) PluginLink.WindowHandler.GetWindow<AudioWindow>().audioModules.Add(new StaticCircleModule(10.0, new Vector4(1, 0, 1, 1), position, 200, 12, 6));
         }
         catch (Exception e) { PluginLog.Log(e.Message); }
 
-        SoundStorage.ClearAll();
         return playAudioSourceHook!.Original(a1, fileName, a3, a4, posXAsHex, posYAsHex, posZAsHex, a8, a9, a10, a11, a12, a13, a14, a15, a16);
     }
 
-    unsafe void GetForSoundType(ref SoundType soundType, ref GameObject* gameObject) 
+    unsafe GameObject* GetForSoundType(ref SoundType soundType, out GameObject* gameObject) 
     {
-        if (soundType is BaseBattleSoundType)       gameObject = SoundStorage.LastBattleSound;
-        if (soundType is BaseFootstepSoundType)     gameObject = SoundStorage.LastFootstep;
+        return gameObject = SoundStorage.LastAccessedGameObject;
     }
 
     unsafe void PrintSoundType(ref SoundType soundType, Vector3 position, GameObject* gameObject)
     {
+        return;
         string posString = $"[X:{position.X.ToString("0.00", CultureInfo.InvariantCulture)}, Y:{position.Y.ToString("0.00", CultureInfo.InvariantCulture)}, Z:{position.Z.ToString("0.00", CultureInfo.InvariantCulture)}]";
         string gameObjectName = "[]";
         if (gameObject != null) gameObjectName = $"[{Marshal.PtrToStringUTF8((IntPtr)gameObject->GetName())}]";
-        PluginLog.LogWarning(string.Format("{0,-15}{1,-15} {2,-32}", soundType.ToString(), posString, gameObjectName));
+        else gameObjectName = "[NULL GAMEOBJECT]";
+        int gameObjectIndex = -1;
+        if (gameObject != null) gameObjectIndex = gameObject->ObjectIndex;
+        string finalString = string.Format("{2,-6} {3,-32} {1,-40} {0,-15}", soundType.ToString(), posString, $"[{gameObjectIndex}]", gameObjectName);
+        if (soundType is UnimplementedSoundType or InvalidSoundType or UnparsedSoundType || gameObject == null) PluginLog.LogError(finalString);
+        else PluginLog.LogWarning(finalString);
     }
 
 }

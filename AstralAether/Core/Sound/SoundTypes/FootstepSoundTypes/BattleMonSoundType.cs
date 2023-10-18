@@ -13,5 +13,5 @@ internal class BattleMonSoundType : BaseBattleSoundType
         InternalType2 = splittedInteresting[1];
     }
 
-    public new string ToString() => $"{InternalType}_{InternalType2}";
+    //public new string ToString() => $"{InternalType}_{InternalType2}";
 }

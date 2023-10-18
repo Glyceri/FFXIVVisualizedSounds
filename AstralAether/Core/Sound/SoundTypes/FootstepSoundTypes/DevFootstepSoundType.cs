@@ -11,5 +11,5 @@ internal class DevFootstepSoundType : BaseFootstepSoundType
         InternalType = int.Parse(splittedInteresting[0]);
     }
 
-    public new string ToString() => $"{InternalType}";
+    //public new string ToString() => $"{InternalType}";
 }

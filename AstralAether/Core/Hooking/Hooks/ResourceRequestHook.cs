@@ -1,12 +1,11 @@
+using static AstralAether.Core.Hooking.Delegates;
 using AstralAether.Core.Hooking.Attributes;
-using AstralAether.Core.Sound;
 using Dalamud.Hooking;
-using Dalamud.Logging;
 using Dalamud.Utility.Signatures;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System;
-using static AstralAether.Core.Hooking.Delegates;
+using Dalamud.Logging;
 
 namespace AstralAether.Core.Hooking.Hooks;
 
@@ -47,6 +46,6 @@ public unsafe class ResourceRequestHook : HookableElement
     {
         string p = Marshal.PtrToStringUTF8((IntPtr)path)!;
         if (!p.EndsWith(".scd")) return;
-        //PluginLog.LogError($"[{asAsync}] {p}");
+       //PluginLog.LogError($"[{asAsync}] {p}");
     }
 }

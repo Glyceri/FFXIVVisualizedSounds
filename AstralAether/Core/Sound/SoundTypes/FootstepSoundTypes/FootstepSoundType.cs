@@ -22,5 +22,5 @@ internal class FootstepSoundType : BaseFootstepSoundType
         FootWearType = splittedInteresting[4];
     }
 
-    public override string ToString() => base.ToString() + $" {InternalType}_{FootstepType}_{Gender}_{Unk1}_{FootWearType}";
+    //public override string ToString() => base.ToString() + $" {InternalType}_{FootstepType}_{Gender}_{Unk1}_{FootWearType}";
 }

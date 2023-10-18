@@ -13,7 +13,12 @@ internal class FootstepSoundParser : SoundParserElement
 
         string identifier = splitPath[2];
 
-        if (identifier == "foot") return new FootstepSoundType(fullPath, ref splitPath, mainIdentifier);
+        if (identifier == "foot")
+        {
+            string[] dashSplit = splitPath[3].Split('_');
+            if (dashSplit.Length > 3) return new FootstepSoundType(fullPath, ref splitPath, mainIdentifier);
+            else return new SmallFootstepSound(fullPath, ref splitPath, mainIdentifier);
+        }
         if (identifier == "dev") return new DevFootstepSoundType(fullPath, ref splitPath, mainIdentifier);
 
         return new UnimplementedSoundType(fullPath, mainIdentifier);

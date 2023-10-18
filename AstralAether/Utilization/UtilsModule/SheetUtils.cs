@@ -3,6 +3,8 @@ using Lumina.Excel.GeneratedSheets;
 using AstralAether.Core.Handlers;
 using AstralAether.Utilization.Attributes;
 using AstralAether.Core.Singleton;
+using Dalamud.Logging;
+using System.IO;
 
 namespace AstralAether.Utilization.UtilsModule;
 
@@ -14,7 +16,7 @@ internal class SheetUtils : UtilsRegistryType, ISingletonBase<SheetUtils>
 
     internal override void OnRegistered()
     {
-        actions = PluginHandlers.DataManager.GetExcelSheet<Action>()!;
+        actions = PluginHandlers.DataManager.GetExcelSheet<Action>()!;           
     }
 
     public Action? GetAction(uint actionID) => actions?.GetRow(actionID)!;
